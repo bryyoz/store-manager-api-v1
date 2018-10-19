@@ -47,7 +47,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(res['output'],'These are your products records')
         self.assertEqual(response.status_code,200)
 
-    def test_get_one_sale(self):
+    def test_get_one_product(self):
         """These tests check  specific products record """ 
         response = self.client.get('/api/V1/products/1', content_type="application/json")
         self.assertTrue(response.status_code, 200)
