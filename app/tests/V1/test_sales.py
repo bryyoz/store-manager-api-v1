@@ -4,15 +4,15 @@ import unittest
 import sys # fix import errors
 import os
 #sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from app.apps import create_app
+from app import create_app
 import json
 
 
-products_data = [{
+sales_data = [{
     "sales_id":1,
     "names":"josh kie",
-    "items_sold":50,
-    "total_sales":2345,
+    "cart":50,
+    "total_price":2345
     
 }]
 
@@ -27,7 +27,7 @@ class TestClient(unittest.TestCase):
     
     def test_post_sales(self):
         """These tests check for all posts posted"""
-        response = self.client.post('/api/V1/sales',data=json.dumps(products_data[0]),
+        response = self.client.post('/api/V1/sales',data=json.dumps(sales_data[0]),
             content_type='application/json')
 
         res=json.loads(response.data.decode())
