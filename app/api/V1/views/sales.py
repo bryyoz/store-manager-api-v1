@@ -54,12 +54,10 @@ class OneSaleRecord(Resource):
 
 	def get(self, sale_id):
 		response = Sales.get_one_sale(sale_id)
-		if response == 'not found':
-			return make_response(jsonify({'message': 'not found',
-                                            'status': 'ok'}), 404)
-		return make_response(jsonify({'message': 'success',
-                                        'status': 'ok',
-                                        'product': response}), 200)
+		if response == 'sale record not available':
+			return {'message': 'There is no sale record found'}, 404
+		return make_response(jsonify({'message': 'This is your sale record',
+                                      'product': response}), 200)
 
 
 	

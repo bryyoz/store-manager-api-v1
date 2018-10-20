@@ -40,4 +40,4 @@ class Sales():
         sale_record = [sale for sale in Sales.salesRecords if sale['sale_id'] == sale_id]
         if sale_record:
             return sale_record
-        return 'not found'
+        return 'sale record not available'
