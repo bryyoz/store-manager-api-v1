@@ -6,14 +6,14 @@ from ..models.Users import User
 
 ns_login = Namespace('Authentication')
 
-'''
+
 login_model = ns_login.model('Login',{
 		'email': fields.String(required=True, description='user email address'),
         'username': fields.String(required=True, description='user username'),
         'password': fields.String(required=True, description='user password'),
       
 
-	})'''
+	})
 
 
 parser = reqparse.RequestParser()
@@ -27,7 +27,7 @@ parser.add_argument('password', required=True, help="password cannot be blank")
 class UserLogin(Resource):
 	'''user login class'''
 	
-	@ns_login.expect(user_model)
+	@ns_login.expect(login_model)
 	def post(self):
 
 		args = parser.parse_args()
