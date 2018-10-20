@@ -9,13 +9,13 @@ class User:
 
 
     def signup(self):
-        new_user = dict(
+        payload = dict(
             email = self.email,
             username = self.username,
             password = self.password
             )
 
-        User.all_users.append(new_user)
+        User.all_users.update(payload)
 
 
     def get_one_user(self, email):
