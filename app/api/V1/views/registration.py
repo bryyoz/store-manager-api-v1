@@ -4,10 +4,10 @@ from flask_jwt_extended import (jwt_required, create_access_token, get_jwt_ident
 
 from ..models.Users import User
 
-ns_auth = Namespace('Authentication')
+ns_register = Namespace('Authentication')
 
 
-user_model = ns_auth.model('Registration',{
+user_model = ns_register.model('Registration',{
 		'email': fields.String(required=True, description='user email address'),
         'username': fields.String(required=True, description='user username'),
         'password': fields.String(required=True, description='user password'),
@@ -21,11 +21,11 @@ parser.add_argument('email', required=True, help="email cannot be blank")
 parser.add_argument('username')
 parser.add_argument('password', required=True, help="password cannot be blank")
 
-@ns_auth.route('')
+@ns_register.route('')
 class UserRegistration(Resource):
 	"""All products class"""
 
-	@ns_auth.expect(user_model)
+	@ns_register.expect(user_model)
 	def post(self):
 		"""Register a new user"""
 		
@@ -48,33 +48,3 @@ class UserRegistration(Resource):
 			return make_response(jsonify({'message':'Email already exists.'}))
 
 
-@ns_auth.route('')
-class UserLogin(Resource):
-	'''user login class'''
-	login_model = ns_auth.model('Login',{
-		'email': fields.String(required=True, description='user email address'),
-        'username': fields.String(required=True, description='user username'),
-        'password': fields.String(required=True, description='user password'),
-      
-
-	})
-
-
-
-	@ns_auth.expect(login_model)
-	def post(self):
-		args = parser.parse_args()
-		email = args['email']
-		password = args['password']
-		
-		user = User.get_one_user(self, email)
-
-		if user == "User not found":
-			return make_response(jsonify(
-				{
-				"message":"Your account does not exist!, Please Register!",
-				}), 401)
-		else:
-			token = create_access_token(identity=email)
-			return make_response(jsonify({'message': 'Logged in successfully!', 'token': token}), 201)
-		

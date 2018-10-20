@@ -26,9 +26,35 @@ class TestClient(unittest.TestCase):
         self.app_context.push()
         self.client = self.app.test_client()
 
+
+    def user_authentication_register(self, email="kip@kip.com", password="pass", confirm_password="pass"):
+        """Method to register a User"""
+        user_register = {
+            'email': email,
+            'password': password,
+            'confirm_password': confirm_password,
+            'role': 'admin'
+        }
+        return self.client().post('/api/V1/register', data=user_register)
+
+    def user_authentication_login(self, email="him@kip.com", password="pass"):
+        """Method to login a User"""
+        user_login = {
+            'email': email,
+            'password': password
+        }
+        return self.client().post('/api/v1/login', data=user_login)
+
     
     def test_post_products(self):
-        """These tests check for all posts posted"""
+        """Test that Admin can add a product"""
+
+        # Authenticate User
+        self.user_authentication_register(email="kip12@kip.com", password="pass", confirm_password="pass")
+        response = self.user_authentication_login(email="kip12@kip.com", password="pass")
+
+        authentication_token = json.loads(response.data.decode())['token']
+
         response = self.client.post('/api/V1/products',data=json.dumps(products_data[0]),
             content_type='application/json')
 
@@ -41,6 +67,11 @@ class TestClient(unittest.TestCase):
 
     def test_get_all_products(self):
         """These tests check all products record """
+        # Authenticate User
+        self.user_authentication_register(email="bin@kip.com", password="pass", confirm_password="pass")
+        response = self.user_authentication_login(email="bin@kip.com", password="pass")
+        authentication_token = json.loads(response.data.decode())['token']
+
         response=self.client.get('/api/V1/products')
 
         res=json.loads(response.data.decode())
@@ -48,7 +79,13 @@ class TestClient(unittest.TestCase):
         self.assertEqual(response.status_code,200)
 
     def test_get_one_product(self):
-        """These tests check  specific products record """ 
+        """These tests check  specific products record """
+        # Authenticate User
+        self.user_authentication_register(email="qwerty@kip.com", password="pass", confirm_password="pass")
+        response = self.user_authentication_login(email="qwerty@kip.com", password="pass")
+
+        authentication_token = json.loads(response.data.decode())['token']
+ 
         response = self.client.get('/api/V1/products/1', content_type="application/json")
         self.assertTrue(response.status_code, 200)
 
