@@ -19,7 +19,7 @@ products_data = [{
 }]
 
 
-class TestClient(unittest.TestCase):
+class TestProducts(unittest.TestCase):
     def setUp(self):
         self.app = create_app('testing')
         self.app_context =self.app.app_context()
@@ -27,31 +27,31 @@ class TestClient(unittest.TestCase):
         self.client = self.app.test_client()
 
 
-    def user_authentication_register(self, email="kip@kip.com", password="pass", confirm_password="pass"):
+    def user_authentication_register(self, email="kip@gmail.com", password="1234", re_password="1234"):
         """Method to register a User"""
         user_register = {
             'email': email,
             'password': password,
-            'confirm_password': confirm_password,
-            'role': 'admin'
+            're_password': re_password
+            
         }
-        return self.client().post('/api/V1/register', data=user_register)
+        return self.client.post('/api/V1/register', data=user_register)
 
-    def user_authentication_login(self, email="him@kip.com", password="pass"):
+    def user_authentication_login(self, email="kip@gmail.com", password="1234"):
         """Method to login a User"""
         user_login = {
             'email': email,
             'password': password
         }
-        return self.client().post('/api/v1/login', data=user_login)
+        return self.client.post('/api/v1/login', data=user_login)
 
     
     def test_post_products(self):
         """Test that Admin can add a product"""
 
         # Authenticate User
-        self.user_authentication_register(email="kip12@kip.com", password="pass", confirm_password="pass")
-        response = self.user_authentication_login(email="kip12@kip.com", password="pass")
+        self.user_authentication_register(email="kip12@gmail.com", password="1234", re_password="1234")
+        response = self.user_authentication_login(email="kip12@gmail.com", password="1234")
 
         authentication_token = json.loads(response.data.decode())['token']
 
@@ -68,8 +68,8 @@ class TestClient(unittest.TestCase):
     def test_get_all_products(self):
         """These tests check all products record """
         # Authenticate User
-        self.user_authentication_register(email="bin@kip.com", password="pass", confirm_password="pass")
-        response = self.user_authentication_login(email="bin@kip.com", password="pass")
+        self.user_authentication_register(email="bin@gmail.com", password="1234", re_password="1234")
+        response = self.user_authentication_login(email="bin@gmail.com", password="1234")
         authentication_token = json.loads(response.data.decode())['token']
 
         response=self.client.get('/api/V1/products')
@@ -81,8 +81,8 @@ class TestClient(unittest.TestCase):
     def test_get_one_product(self):
         """These tests check  specific products record """
         # Authenticate User
-        self.user_authentication_register(email="qwerty@kip.com", password="pass", confirm_password="pass")
-        response = self.user_authentication_login(email="qwerty@kip.com", password="pass")
+        self.user_authentication_register(email="qwerty@gmail.com", password="1234", re_password="1234")
+        response = self.user_authentication_login(email="qwerty@gmail.com", password="1234")
 
         authentication_token = json.loads(response.data.decode())['token']
  
