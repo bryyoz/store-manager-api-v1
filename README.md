@@ -1,6 +1,7 @@
 # store-manager-api-v1
 [![Coverage Status](https://coveralls.io/repos/github/bryyoz/store-manager-api-v1/badge.svg)](https://coveralls.io/github/bryyoz/store-manager-api-v1)
-
+[![Maintainability](https://api.codeclimate.com/v1/badges/b0a7e0e967007232b6db/maintainability)](https://codeclimate.com/github/bryyoz/store-manager-api-v1/maintainability)
+[![Build Status](https://travis-ci.org/bryyoz/store-manager-api-v1.svg?branch=develop)](https://travis-ci.org/bryyoz/store-manager-api-v1)
 
 
 
