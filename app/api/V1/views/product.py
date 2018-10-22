@@ -15,6 +15,15 @@ product_models = ns_product.model("Store products",{
   "price":fields.Integer
   })
 
+parser = reqparse.RequestParser()
+
+parser.add_argument('product_name')
+parser.add_argument('category')
+parser.add_argument('description')
+parser.add_argument('inventory')
+parser.add_argument('price')
+    
+
 
 @ns_product.route('')
 class ProductEndpoint(Resource):
@@ -22,13 +31,7 @@ class ProductEndpoint(Resource):
 
     @ns_product.expect(product_models)
     def post(self):
-      parser = reqparse.RequestParser()
-
-      parser.add_argument('product_name', required=True, type=str, help='Please input product name', location=['json'])
-      parser.add_argument('category', required=True, type=str, help='Please input product category', location=['json'])
-      parser.add_argument('description', required=True, type=str, help='Please input commodity description', location=['json'])
-      parser.add_argument('price', required=True, type=int, help='Please input price of commodity', location=['json'])
-    
+      
 
 
 
@@ -36,12 +39,13 @@ class ProductEndpoint(Resource):
       product_name = args['product_name']
       category = args['category']
       description = args['description']
+      inventory  = args['inventory']
       price = args['price']
         
-      result = Product(product_name, category, description, category, price)
+      result = Product(product_name, category, description, inventory, price)
       posted_product = result.post_product()
       
-      return {'output': 'Product created' }, 201
+      return {'message':'Product created' }, 201
 
     
     def get(self):

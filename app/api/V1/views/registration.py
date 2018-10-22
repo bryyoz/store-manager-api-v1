@@ -34,14 +34,13 @@ class UserRegistration(Resource):
 		password = args['password']
 		re_password = args['re_password']
 		
-		
 
 		new_user = User.get_one_user(self, email)
 
 		if password == '' or password == ' ':
-			return make_response(jsonify({'message': 'enter password',
-                                          'status': 'failed'}), 401)
-        # Compare passwords
+			return make_response(jsonify({'message': 'please enter your password',
+                                          'status': 'login failed'}), 401)
+
 		if password != re_password:
 			return make_response(jsonify({'message': 'passwords do not match',
                                           'status': 'failed'}), 401)
@@ -50,12 +49,10 @@ class UserRegistration(Resource):
 		if new_user == 'User not found':
 			new_user = User(email, password, re_password)
 			new_user.signup()
-
-			return make_response(jsonify(
-				{"message":"User created!",
-				"user":new_user.__dict__}
-				), 201)
+			
+			return make_response(jsonify({"message":"User created!",
+												"user":new_user.__dict__}), 201)
 		else:
-			return make_response(jsonify({'message':'Email already exists.'}), 202)
+			return make_response(jsonify({'message':'Email already exists.'}), 201)
 
 

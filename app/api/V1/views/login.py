@@ -49,8 +49,9 @@ class UserLogin(Resource):
 			if user and User.validate_user_password(password):
 				token =create_access_token(['email'])
 				return make_response(jsonify({'message': 'Logged in successfully!', 'token': token}), 201)
-
-			
+			else:
+				return make_response(jsonify({'message': 'Invalid email or password. Please try again',
+                                              'status': 'failed'}), 401)
 	
         
 
