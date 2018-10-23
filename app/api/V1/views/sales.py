@@ -14,6 +14,7 @@ sales_models = ns_sales.model("Store sales",{
 	})
 
 
+
 @ns_sales.route('')
 class SalesRecords(Resource):
 
@@ -28,8 +29,18 @@ class SalesRecords(Resource):
 
 		args = parser.parse_args()
 		names = args['names']
+
+		if names == '' or names == None:
+			return make_response(jsonify({'message':'cannot be empty'}))
+		
 		cart = args['cart']
+		if cart == '' or cart == None:
+			return make_response(jsonify({'message':'cannot be empty'}))
+
+
 		total_price  = args['total_price']
+		if total_price == '' or total_price == None:
+			return make_response(jsonify({'message':'cannot be empty'}))
 		
 		result = Sales(names,cart, total_price)
 		posted_sale = result.post_sales()

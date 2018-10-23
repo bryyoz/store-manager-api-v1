@@ -2,100 +2,77 @@ import unittest
 from flask import json
 from app import create_app
 
-
 class TestAuthentication(unittest.TestCase):
     """Tests for user authentication"""
 
     def setUp(self):
         """Set up for configuration and testing env"""
-        self.app = create_app(config_name='testing')
-        self.client = self.app.test_client
+        self.app = create_app('testing')
+        self.test_client = self.app.test_client()
+        self.app_context = self.app.app_context()
+        self.client = self.app.test_client()
 
-        self.sample_user_reg_data = {
-                                    "email": "mail@mail.com",
-                                    "password": "pass",
-                                    "confirm_password": "pass"}
+        self.user_admin = json.dumps({
+            "name": "brian",
+            "email": "brian@gmail.com",
+            "password": "1234",
+            "role": "admin"
+        })
+        admin_signup = self.test_client.post("/api/V1/register",data=self.user_admin, headers={
+                'content-type': 'application/json'})
+        self.user_attendant = json.dumps({
+                "name": "loise",
+                "email": "loise@gmail.com",
+                "password": "1234",
+                "role": "attendant"
+            })
 
-        self.sample_user_reg_bad = {
-                                    "email": "mail@mail.com",
-                                    "password": "pass",
-                                    "confirm_password": "bad_pass"}
+        attendant_signup = self.test_client.post("/api/V1/register",data=self.user_attendant,
+                headers={'content-type': 'application/json'})
+        self.login_admin = json.dumps({
+            "email": "brian@gmail.com",
+            "password": "1234"
+        })
 
-        self.sample_user_login_data = {
-                                      "email": "mail@mail.com",
-                                      "password": "pass"}
-        self.sample_user_login_bad = {
-                                      "email": "mail@mail.com",
-                                      "password": "bad_pass"}
+        admin_login = self.test_client.post("/api/V1/login",data=self.login_admin, headers={
+                                                'content-type': 'application/json' })
+        #self.token_for_admin = json.loads(admin_login.data.decode())["token"]
+        self.login_attendant = json.dumps({
+            "email": "brian@gmail.com",
+            "password": "brian"
+        })
+
+        attendant_login = self.test_client.post("/api/V1/login", data=self.login_attendant,
+                                                headers={
+                                                    'content-type': 'application/json'
+                                                })
+        #self.token_for_attendant = json.loads(attendant_login.data.decode())["token"]
+
+
+
     
-    def test_user_registration(self):
-        """Test that user can register successfully"""
-        user_reg = self.client().post('/api/V1/register',
-                                      data={
-                                           "email": "user@mail.com",
-                                           "password": "pass",
-                                           "confirm_password": "pass"})
-        response = json.loads(user_reg.data.decode())
-        self.assertEqual(response['message'], "User created!")
-        self.assertEqual(user_reg.status_code, 201)
-
-    def test_existing_user(self):
-        """Test that user cant register twice"""
-        user_reg = self.client().post('/api/V1/register',
-                                      data=self.sample_user_reg_data)
-        response = json.loads(user_reg.data.decode())
-        self.assertEqual(user_reg.status_code, 201)
-        self.assertEqual(response['message'], "User created!")
-        
-        user_reg1 = self.client().post('/api/V1/register',
-                                      data=self.sample_user_reg_data)
-        response1 = json.loads(user_reg1.data.decode())
-        self.assertEqual(user_reg1.status_code, 202)
-        self.assertEqual(response1['message'],'Email already exists.')
-
-    def test_user_login(self):
+    def test_user_not_exist(self):
         """Test that user can login"""
         
-        user_login = self.client().post('/api/V1/login',
-                                        data={
-                                           "email": "user1@mail.com",
-                                           "password": "pass"})
+        user_login = self.client.post('/api/V1/login',data=self.login_admin,
+          headers={'content-type': 'application/json'}) 
         response = json.loads(user_login.data.decode())
-        self.assertEqual(response['message'], 'Logged in successfully!')
-        self.assertTrue(response['token'])
-        self.assertEqual(user_login.status_code, 201)
+        self.assertEqual(response['message'], 'Your account does not exist!, Please Register!')
+        self.assertEqual(user_login.status_code, 401)
 
+
+    def test_user_login_none_existing_password(self):
+        """Test that user cant login with incorrect password"""
+        a_login = self.client.post('/api/V1/login',data=json.dumps({
+          "email": "brian@gmail.com",
+            "password": "1234"}),
+          headers={'content-type': 'application/json'}) 
+                                        
+        response = json.loads(a_login.data.decode())
+        self.assertEqual(response['message'], 'Your account does not exist!, Please Register!')
+        self.assertEqual(a_login.status_code, 401)
    
 
-    def test_login_unregistered_account(self):
-        user_login = self.client().post('/api/V1/login',
-                                        data={
-                                           "email": "user4@mail.com",
-                                           "password": "pass"})
-        response = json.loads(user_login.data.decode())
-        self.assertEqual(response['message'], "Your account does not exist!, Please Register!")
-        self.assertEqual(user_login.status_code, 401)
-
-    def test_invalid_email(self):
-        """Test that user cant use invalid email"""
-        user_reg = self.client().post('/api/V1/register',
-                                      data={
-                                           "email": "nerd.com",
-                                           "password": "pass",
-                                           "confirm_password": "pass"})
-        response = json.loads(user_reg.data.decode())
-        self.assertEqual(user_reg.status_code, 400)
-        self.assertEqual(response['message'], 'enter a valid email')
-        user_login = self.client().post('/api/V1/login',
-                                        data={
-                                           "email": "nerd.com",
-                                           "password": "bad_pass"})
-        response = json.loads(user_login.data.decode())
-        self.assertEqual(response['message'], "Your account does not exist!, Please Register!")
-        self.assertEqual(user_login.status_code, 401)
 
     def tearDown(self):
-        del self.sample_user_login_bad
-        del self.sample_user_login_data
-        del self.sample_user_reg_bad
-        del self.sample_user_reg_data
+        pass
