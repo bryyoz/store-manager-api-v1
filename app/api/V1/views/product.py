@@ -17,32 +17,36 @@ product_models = ns_product.model("Store products",{
 
 parser = reqparse.RequestParser()
 
-parser.add_argument('product_name')
-parser.add_argument('category')
-parser.add_argument('description')
-parser.add_argument('inventory')
-parser.add_argument('price')
+parser.add_argument('product_name', required=True)
+parser.add_argument('category', required=True)
+parser.add_argument('description', required=True)
+parser.add_argument('inventory', required=True)
+parser.add_argument('price', required=True)
     
 
 
 @ns_product.route('')
 class ProductEndpoint(Resource):
     """Contains all the endpoints for Product Model"""
+    
 
     @ns_product.expect(product_models)
     def post(self):
-      
-
-
-
       args = parser.parse_args()
-      product_name = args['product_name']
+      product_names = args['product_name']
+      for product_name in product_names:
+        if not product_name:
+          return make_response(jsonify({'cannot be empty'}))
+          
+
       category = args['category']
       description = args['description']
       inventory  = args['inventory']
       price = args['price']
+
+      
         
-      result = Product(product_name, category, description, inventory, price)
+      result = Product(product_names, category, description, inventory, price)
       posted_product = result.post_product()
       
       return {'message':'Product created' }, 201
