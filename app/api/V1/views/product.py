@@ -11,17 +11,17 @@ product_models = ns_product.model("Store products",{
   "product_name":fields.String,
   "category":fields.String,
   "description":fields.String,
-  "inventory":fields.Integer,
-  "price":fields.Integer
+  "inventory":fields.String,
+  "price":fields.String
   })
 
 parser = reqparse.RequestParser()
 
-parser.add_argument('product_name', required=True)
-parser.add_argument('category', required=True)
-parser.add_argument('description', required=True)
-parser.add_argument('inventory', required=True)
-parser.add_argument('price', required=True)
+parser.add_argument('product_name', required=True, help= 'This field cannot be blank')
+parser.add_argument('category', required=True, help= 'This field cannot be blank')
+parser.add_argument('description', required=True,help= 'This field cannot be blank')
+parser.add_argument('inventory', required=True,help= 'This field cannot be blank')
+parser.add_argument('price', required=True, help= 'This field cannot be blank')
     
 
 
@@ -30,23 +30,33 @@ class ProductEndpoint(Resource):
     """Contains all the endpoints for Product Model"""
     
 
-    @ns_product.expect(product_models)
+    @ns_product.expect(product_models, validate = True)
     def post(self):
       args = parser.parse_args()
-      product_names = args['product_name']
-      for product_name in product_names:
-        if not product_name:
-          return make_response(jsonify({'cannot be empty'}))
-          
+
+      product_name = args['product_name'] 
+      if product_name == '' or product_name == None:
+        return make_response(jsonify({'message':'cannot be empty'}))
 
       category = args['category']
+      if category == '' or category == None:
+        return make_response(jsonify({'message':'cannot be empty'}))
+
       description = args['description']
+      if description == '' or description == None:
+        return make_response(jsonify({'message':'cannot be empty'}))
+
       inventory  = args['inventory']
+      if inventory == '' or inventory == None:
+        return make_response(jsonify({'message':'cannot be empty'}))
+
       price = args['price']
+      if price == '' or price == None:
+        return make_response(jsonify({'message':'cannot be empty'}))
 
       
         
-      result = Product(product_names, category, description, inventory, price)
+      result = Product(product_name, category, description, inventory, price)
       posted_product = result.post_product()
       
       return {'message':'Product created' }, 201
