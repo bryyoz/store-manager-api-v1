@@ -48,7 +48,25 @@ class TestProducts(unittest.TestCase):
         self.assertEqual(response.status_code,404)
 
      
-    
+    def test_post_products(self):
+        """These tests check for all posts posted"""
+        response = self.client.post('/api/V1/products',
+                        data=json.dumps({
+                            "product_id":1,
+                            "product_name":"television",
+                            "category":"electricals",
+                            "product_description":"oled",
+                            "inventory":50,
+                            "price":23450 }),
+             headers={'content-type': 'application/json',
+                    
+                                            })
+
+                                            
+        res=json.loads(response.data.decode())
+
+        self.assertEqual(res['message'],'cannot be empty')
+        self.assertEqual(response.status_code, 200)
 
 
 
