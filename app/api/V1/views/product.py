@@ -17,11 +17,11 @@ product_models = ns_product.model("Store products",{
 
 parser = reqparse.RequestParser()
 
-parser.add_argument('product_name', required=True, help= 'This field cannot be blank')
-parser.add_argument('category', required=True, help= 'This field cannot be blank')
-parser.add_argument('description', required=True,help= 'This field cannot be blank')
-parser.add_argument('inventory', required=True,help= 'This field cannot be blank')
-parser.add_argument('price', required=True, help= 'This field cannot be blank')
+parser.add_argument('product_name' )
+parser.add_argument('category')
+parser.add_argument('description')
+parser.add_argument('inventory')
+parser.add_argument('price')
     
 
 
@@ -30,7 +30,7 @@ class ProductEndpoint(Resource):
     """Contains all the endpoints for Product Model"""
     
 
-    @ns_product.expect(product_models, validate = True)
+    @ns_product.expect(product_models)
     def post(self):
       args = parser.parse_args()
 

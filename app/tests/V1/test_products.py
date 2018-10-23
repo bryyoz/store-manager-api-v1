@@ -65,7 +65,7 @@ class TestProducts(unittest.TestCase):
                                             
         res=json.loads(response.data.decode())
 
-        self.assertEqual(res['message'],'Product created')
+        self.assertEqual(res['message'],'cannot be empty')
         #self.assertEqual(response.status_code, 400)
 
 

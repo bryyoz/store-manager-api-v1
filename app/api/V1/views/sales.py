@@ -19,7 +19,7 @@ sales_models = ns_sales.model("Store sales",{
 class SalesRecords(Resource):
 
 	
-	@ns_sales.expect(sales_models, validate = True)
+	@ns_sales.expect(sales_models)
 	def post(self):
 		parser = reqparse.RequestParser()
 
