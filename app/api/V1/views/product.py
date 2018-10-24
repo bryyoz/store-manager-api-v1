@@ -3,6 +3,7 @@ from flask_restplus import Namespace, Resource, reqparse, fields
 from flask import make_response, jsonify
 
 from ..models.Products import Product
+from ..models.Users import jwt_required
 
 ns_product = Namespace('Products')
 
@@ -29,9 +30,12 @@ parser.add_argument('price')
 class ProductEndpoint(Resource):
     """Contains all the endpoints for Product Model"""
     
-
+    @jwt_required #adding protection
     @ns_product.expect(product_models)
+    @ns_product.doc(security = 'apikey')
     def post(self):
+
+      
       args = parser.parse_args()
 
       product_name = args['product_name'] 
@@ -59,7 +63,7 @@ class ProductEndpoint(Resource):
       result = Product(product_name, category, description, inventory, price)
       posted_product = result.post_product()
       
-      return {'message':'Product created' }, 201
+      return {'output':'Product created' }, 201
 
     
     def get(self):
@@ -72,10 +76,7 @@ class ProductEndpoint(Resource):
 @ns_product.route('/<int:product_id>')
 class GetOneProduct(Resource):
 
-    
     def get(self, product_id):
-
-        
         one_product = Product.get_one_product(product_id)
         if one_product == 'product not available':
             return {'message': 'no product in inventory'}, 404

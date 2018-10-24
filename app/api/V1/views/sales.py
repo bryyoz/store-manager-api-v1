@@ -3,6 +3,7 @@ from flask_restplus import Namespace, Resource, reqparse, fields
 from flask import make_response, jsonify
 
 from ..models.Sales import Sales
+from ..models.Users import jwt_required
 
 ns_sales = Namespace('Sales')
 
@@ -14,18 +15,20 @@ sales_models = ns_sales.model("Store sales",{
 	})
 
 
-
 @ns_sales.route('')
 class SalesRecords(Resource):
 
-	
+	@jwt_required
 	@ns_sales.expect(sales_models)
+	@ns_sales.doc(security = 'apikey')
 	def post(self):
+
+		
 		parser = reqparse.RequestParser()
 
-		parser.add_argument('names', required=True, type=str, help='Please input your name', location=['json'])
+		parser.add_argument('names')
 		parser.add_argument('cart')
-		parser.add_argument('total_price', required=True, type=int, help='Please input a total price', location=['json'])
+		parser.add_argument('total_price')
 
 		args = parser.parse_args()
 		names = args['names']
@@ -62,8 +65,11 @@ class SalesRecords(Resource):
 @ns_sales.route('/<int:sale_id>')
 class OneSaleRecord(Resource):
 
-
+	@jwt_required
+	@ns_sales.doc(security = 'apikey')
 	def get(self, sale_id):
+
+
 		response = Sales.get_one_sale(sale_id)
 		if response == 'sale record not available':
 			return {'message': 'There is no sale record found'}, 404

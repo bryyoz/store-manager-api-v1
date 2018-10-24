@@ -9,6 +9,7 @@ ns_register = Namespace('Authentication')
 
 user_model = ns_register.model('Registration',{
 		'email': fields.String(required=True, description='user email address'),
+		'role':fields.String,
         'password': fields.String(required=True, description='user password'),
         're_password': fields.String(required=True, description='user password')
       
@@ -20,6 +21,7 @@ parser = reqparse.RequestParser()
 parser.add_argument('email',)
 parser.add_argument('password')
 parser.add_argument('re_password')
+parser.add_argument('role')
 
 @ns_register.route('')
 class UserRegistration(Resource):
@@ -31,6 +33,7 @@ class UserRegistration(Resource):
 		
 		args = parser.parse_args()
 		email = args['email']
+		role =args['role']
 		password = args['password']
 		re_password = args['re_password']
 		
@@ -47,7 +50,7 @@ class UserRegistration(Resource):
 
 
 		if new_user == 'User not found':
-			new_user = User(email, password, re_password)
+			new_user = User(email, role, password, re_password)
 			new_user.signup()
 			
 			return make_response(jsonify({"message":"User created!",
