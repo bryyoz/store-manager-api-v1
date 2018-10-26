@@ -9,13 +9,18 @@ from .views.product import ns_product
 from .views.registration import ns_register
 from .views.login import ns_login
 
-
-
+authorizations = {
+	'apikey':{
+	'type':'apiKey',
+	'in':'header',
+	'name':'x-api-key'
+	}
+}
 
 
 app_V1 = Blueprint("V1",__name__)
 
-api = Api(app_V1,title="Store Manager", version ="1",description="Store Manager v1")
+api = Api(app_V1,title="Store Manager", version ="1",description="Store Manager v1", authorizations=authorizations)
 
 
 api.add_namespace(ns_product, path='/api/V1/products')

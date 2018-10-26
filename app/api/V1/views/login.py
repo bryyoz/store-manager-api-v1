@@ -37,7 +37,7 @@ class UserLogin(Resource):
 		
 		user = User.get_one_user(self, email)
 
-		if email and user == "User not found":
+		if user == "User not found":
 			return make_response(jsonify(
 				{
 				"message":"Your account does not exist!, Please Register!",
