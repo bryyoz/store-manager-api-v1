@@ -66,23 +66,7 @@ class TestProducts(unittest.TestCase):
         self.assertEqual(response.status_code,404)
 
     
-    def test_post_products(self):
-        """These tests check for all posts posted"""
-
-        self.user_authentication_register()
-
-        response = self.user_authentication_login()
-
-        self.token_admin = json.loads(response.data.decode()).get("x-api-key")
-
-        result = self.client.post('/api/V1/products', headers = dict(Authorization ="Bearer "+ self.token_admin),
-                        data=self.product_record)
-                                            
-        res=json.loads(result.data.decode())
-
-        self.assertEqual(self.token_admin,'Product created')
-        self.assertEqual(result.status_code, 201)
-
+   
 
 
 

@@ -36,12 +36,6 @@ class UserRegistration(Resource):
 		args = parser.parse_args()
 		email = args['email']
 		role =args['role']
-
-		# if role != 'admin' and role != 'attendant':
-		# 	return make_response(jsonify({'message':'Role can only be admin or attendant'}))
-
-		
-
 		password = args['password']
 		re_password = args['re_password']
 		
