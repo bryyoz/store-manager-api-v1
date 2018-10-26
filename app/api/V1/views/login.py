@@ -10,7 +10,7 @@ from flask_jwt_extended import (jwt_required, create_access_token, get_jwt_ident
 
 from ..models import *
 from ..models.Users import User
-#from ..models.Users import jwt_required
+
 
 ns_login = Namespace('Authentication')
 
@@ -38,7 +38,7 @@ def jwt_required(f):
         if not token:
             return {'result': 'token is missing'},401
         try:
-            data = jwt.decode(token,Config.SECRET_KEY),401
+            data = jwt.decode(token, Config.SECRET_KEY)
             for user in User.all_users:
                 if user['email'] == data['email']:
                     current_user = user
@@ -61,10 +61,6 @@ class UserLogin(Resource):
 		password = args['password']
 
 
-		# get user by email to check if user exists
-		
-		# user = User.get_one_user(self, email)
-
 		user = [user for user in User.all_users if user['email'] == email]
 
 		if not user: 
@@ -86,7 +82,7 @@ class UserLogin(Resource):
 				return make_response(jsonify({
 						     "token": token.decode("UTF-8")}), 200)
 			return make_response(jsonify({
-            "Message": "Login failed, wrong entries"
+            "Message": "Login failed"
         }
         ), 401)
 		

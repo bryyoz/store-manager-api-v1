@@ -37,14 +37,10 @@ class UserRegistration(Resource):
 		email = args['email']
 		role =args['role']
 
-		if role != 'admin' and role != 'attendant':
-			return make_response(jsonify({'message':'Role can only be admin or attendant'}))
-
-		# if role != "attendant":
-		# 	return make_response(jsonify({'message':'Role can only be admin or attendant'}))
-		# if role != "admin":
+		# if role != 'admin' and role != 'attendant':
 		# 	return make_response(jsonify({'message':'Role can only be admin or attendant'}))
 
+		
 
 		password = args['password']
 		re_password = args['re_password']

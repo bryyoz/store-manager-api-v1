@@ -3,11 +3,9 @@ import jwt
 
 from flask_restplus import Namespace, Resource, reqparse, fields
 from flask import make_response, jsonify
-#from flask_jwt_extended import (JWTManager, jwt_required, get_jwt_claims)
-
 from ..models.Products import Product
 from ..views.login import jwt_required
-# from ..models.Users import jwt_required
+
 
 ns_product = Namespace('Products')
 
