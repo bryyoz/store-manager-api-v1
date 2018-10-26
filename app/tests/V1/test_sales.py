@@ -57,7 +57,7 @@ class TestClient(unittest.TestCase):
 
         res=json.loads(result.data.decode())
 
-        #self.assertEqual(res['output'],'Sale record has been created')
+        self.assertEqual(res['output'],'Sale record has been created')
         self.assertEqual(response.status_code, 201) 
         
     

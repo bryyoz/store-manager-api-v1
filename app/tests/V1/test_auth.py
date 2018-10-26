@@ -59,6 +59,7 @@ class TestAuthentication(unittest.TestCase):
         self.assertEqual(user_attendant_login.status_code, 201)
         self.token_attendant = json.loads(user_attendant_login.data.decode()).get("x-api-key")
         
+        
 
     
     def test_user_not_exist(self):

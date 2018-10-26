@@ -1,3 +1,4 @@
+import re
 from flask import Flask, jsonify, make_response, request
 from flask_restplus import Api, Resource, Namespace, reqparse, fields
 from flask_jwt_extended import (jwt_required, create_access_token, get_jwt_identity, get_raw_jwt)
@@ -12,16 +13,17 @@ user_model = ns_register.model('Registration',{
 		'role':fields.String,
         'password': fields.String(required=True, description='user password'),
         're_password': fields.String(required=True, description='user password')
-      
-
 	})
 
 
 parser = reqparse.RequestParser()
-parser.add_argument('email',)
+parser.add_argument('email')
+parser.add_argument('role')
 parser.add_argument('password')
 parser.add_argument('re_password')
-parser.add_argument('role')
+
+valid_email = r"(^[a-zA-z0-9_.]+@[a-zA-z0-9-]+\.[a-z]+$)"
+
 
 @ns_register.route('')
 class UserRegistration(Resource):
@@ -34,11 +36,24 @@ class UserRegistration(Resource):
 		args = parser.parse_args()
 		email = args['email']
 		role =args['role']
+
+		if role != 'admin' and role != 'attendant':
+			return make_response(jsonify({'message':'Role can only be admin or attendant'}))
+
+		# if role != "attendant":
+		# 	return make_response(jsonify({'message':'Role can only be admin or attendant'}))
+		# if role != "admin":
+		# 	return make_response(jsonify({'message':'Role can only be admin or attendant'}))
+
+
 		password = args['password']
 		re_password = args['re_password']
 		
 
 		new_user = User.get_one_user(self, email)
+
+		if not re.match(valid_email, email):
+			return jsonify({"message": "Please enter a valid email address"})
 
 		if password == '' or password == ' ':
 			return make_response(jsonify({'message': 'please enter your password',
@@ -49,12 +64,12 @@ class UserRegistration(Resource):
                                           'status': 'failed'}), 401)
 
 
-		if new_user == 'User not found':
+		user = [user for user in User.all_users if user['email'] == email]
+		if not user:
 			new_user = User(email, role, password, re_password)
 			new_user.signup()
 			
-			return make_response(jsonify({"message":"User created!",
-												"user":new_user.__dict__}), 201)
+			return make_response(jsonify({"message":"User created!"}), 201)
 		else:
 			return make_response(jsonify({'message':'Email already exists.'}), 201)
 

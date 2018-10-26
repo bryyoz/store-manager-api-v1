@@ -25,9 +25,6 @@ class TestProducts(unittest.TestCase):
                           }
 
 
-        
-
-
     def user_authentication_register(self, email="kip@gmail.com", password="1234", re_password="1234"):
         """Method to register a User"""
         user_register = {
@@ -43,12 +40,8 @@ class TestProducts(unittest.TestCase):
             'email': email,
             'password': password
         }
+        self.token_admin = json.loads(user_login.data.decode()).get("x-api-key")
         return self.client.post('/api/V1/login', data=user_login)
-
-
-
-    
-   
 
     def test_get_all_products(self):
         """These tests check all products record """
@@ -80,15 +73,15 @@ class TestProducts(unittest.TestCase):
 
         response = self.user_authentication_login()
 
-        token_admin = json.loads(response.data.decode()).get("x-api-key")
+        self.token_admin = json.loads(response.data.decode()).get("x-api-key")
 
-        result = self.client.post('/api/V1/products', headers=dict(Authorization ="Bearer {}".format(token_admin)),
+        result = self.client.post('/api/V1/products', headers = dict(Authorization ="Bearer "+ self.token_admin),
                         data=self.product_record)
                                             
         res=json.loads(result.data.decode())
 
-        #self.assertEqual(res['output'],'Product created')
-        self.assertEqual(result.status_code, 401)
+        self.assertEqual(self.token_admin,'Product created')
+        self.assertEqual(result.status_code, 201)
 
 
 

@@ -1,9 +1,12 @@
 """Sales_Records get and post methods"""
+import jwt
 from flask_restplus import Namespace, Resource, reqparse, fields
+#from flask_jwt_extended import (JWTManager, jwt_required, get_jwt_claims)
 from flask import make_response, jsonify
 
 from ..models.Sales import Sales
-from ..models.Users import jwt_required
+from ..views.login import jwt_required
+# from ..models.Users import jwt_required
 
 ns_sales = Namespace('Sales')
 
@@ -21,7 +24,11 @@ class SalesRecords(Resource):
 	@jwt_required
 	@ns_sales.expect(sales_models)
 	@ns_sales.doc(security = 'apikey')
-	def post(self):
+	def post(self, current_user):
+		if current_user["role"] != "attendant":
+			return make_response(jsonify({
+                "Message": "only attendant can post sales"} ), 403)
+
 
 		
 		parser = reqparse.RequestParser()
@@ -67,7 +74,11 @@ class OneSaleRecord(Resource):
 
 	@jwt_required
 	@ns_sales.doc(security = 'apikey')
-	def get(self, sale_id):
+	def get(self, current_user, sale_id):
+		if current_user["role"] != "admin":
+			return make_response(jsonify({
+                "Message": "Access denied"}
+            ), 403)
 
 
 		response = Sales.get_one_sale(sale_id)
