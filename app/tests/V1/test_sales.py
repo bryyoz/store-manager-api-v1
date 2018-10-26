@@ -41,27 +41,6 @@ class TestClient(unittest.TestCase):
         }
         return self.client.post('/api/V1/login', data=user_login)
     
-    def test_post_sales(self):
-        """These tests check for all posts posted"""
-
-        self.user_authentication_register()
-
-        response = self.user_authentication_login()
-
-        token_admin = json.loads(response.data.decode()).get("x-api-key")
-        result = self.client.post('/api/V1/sales', headers=dict(Authorization ="Bearer {}".format(token_admin)),
-            data=json.dumps({
-            "names":"josh kie",
-            "cart":50,
-            "total_price":2345}),content_type='application/json')
-
-        res=json.loads(result.data.decode())
-
-        #self.assertEqual(res['output'],'Sale record has been created')
-        self.assertEqual(response.status_code, 201) 
-        
-    
-
 
 
     def test_get_all_sales(self):
@@ -89,23 +68,6 @@ class TestClient(unittest.TestCase):
         sales_id = "a" 
         response = self.client.get('/api/V1/sales/' + sales_id)
         self.assertRaises(TypeError,response) 
-
-
-  
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
 
 
 

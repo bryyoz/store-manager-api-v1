@@ -4,27 +4,47 @@
 [![Build Status](https://travis-ci.org/bryyoz/store-manager-api-v1.svg?branch=develop)](https://travis-ci.org/bryyoz/store-manager-api-v1)
 
 
+**Store Manager**
+
+Store Manager is a web application that helps store owners manage sales and product inventory 
+records. This application is meant for use in a single store. 
 
 
-This is a Store Manager Application
-To Run and test this application
-Take the following steps:
-1. Create a virtual enviroment with the command `$ virtualenv venv --distribute`
-2. Activate the virtual enviroment with the command `$ source venv/scripts/activate
-3. Ensure you have installed GIT
-4. Clone the repository i.e `$ git clone https://github.com/bryyoz/store-manager-api-v1.git
-5. Install requirements `$ pip install -r requirements.txt`
-After completing the following, it is time to run the app
-i) To run the tests use `$ pytest -v`
-ii) To run the app use python run.py
+**Code style**
 
+The api is constructed using python flask and flask restplus
 
-The following endpoints should be working
-1. GET /products	Fetch all products
-2. GET /products/	Fetch a single product record
-3. GET /sales	Fetch all sale records
-4. GET /sales/	Fetch a single sale record
-5. POST /products	Create a product
-6. POST /sales	Create a sale order
-7. POST /auth/signup	Signup a user
-8. POST /auth/login	Login a user
+Testing is done using pytest
+
+Test coverage is done using pytest-cov
+
+**Installation**
+
+Clone the repo to your local machine.
+
+open using python run run.py
+
+open localhost
+
+**Features**
+
+1. Store attendant can search and add products to buyer’s cart. 
+2. Store attendant can see his/her sale records but can’t modify them. 
+3. App should show available products, quantity and price. 
+4. Store owner can see sales and can filter by attendants. 
+5. Store owner can add, modify and delete products.
+6. Store owner can give admin rights to a store attendant. 
+7. Products should have categories. 
+8. Store attendants should be able to add products to specific categories. 
+
+**EndPoint Functionality**
+1. GET /products  			Fetch all products  Get all available products. 
+2. GET /products/productId  Fetch a single product record  
+3. GET /sales  				Fetch all sale records  Get all sale records.
+4. GET /sales/saleId  		Fetch a single sale record  
+5. POST /products  			Create a product
+6. POST /sales  			Create a sale order
+
+**Authors**
+Brian Ngeno
+

@@ -6,8 +6,6 @@ class Product():
 
     def __init__(self, product_name, category, description, inventory, price):
 
-        
-
         self.product_id = len(Product.productRecord) + 1
         self.product_name = product_name
         self.category = category

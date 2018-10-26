@@ -1,9 +1,11 @@
 """Product endpoints get and post methods"""
+import jwt
+
 from flask_restplus import Namespace, Resource, reqparse, fields
 from flask import make_response, jsonify
-
 from ..models.Products import Product
-from ..models.Users import jwt_required
+from ..views.login import jwt_required
+
 
 ns_product = Namespace('Products')
 
@@ -33,9 +35,12 @@ class ProductEndpoint(Resource):
     @jwt_required #adding protection
     @ns_product.expect(product_models)
     @ns_product.doc(security = 'apikey')
-    def post(self):
 
-      
+    def post(current_user, self):
+      if current_user["role"] != "admin":
+        return make_response(jsonify({
+                "Message": "only admin can post a product"}), 403)
+
       args = parser.parse_args()
 
       product_name = args['product_name'] 

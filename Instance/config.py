@@ -1,6 +1,7 @@
 class Config(object):
-	DEBUG = False
-    
+    DEBUG = False
+    SECRET_KEY = "superpower"
+
 
 class DevelopmentConfig(Config):
 	DEBUG = True

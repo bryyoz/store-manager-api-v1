@@ -47,17 +47,8 @@ class TestAuthentication(unittest.TestCase):
         result = json.loads(new_user.data.decode())
         self.assertEqual(result["message"], "User created!")
         self.assertEqual(new_user.status_code, 201)
-        
 
-    def test_user_login(self):
-        """Test that user can login"""
         
-        user_attendant_login = self.client.post('/api/V1/login',data=self.login_attendant,
-          content_type = 'application/json') 
-        response = json.loads(user_attendant_login.data.decode())
-        self.assertEqual(response['message'], 'Logged in successfully!')
-        self.assertEqual(user_attendant_login.status_code, 201)
-        self.token_attendant = json.loads(user_attendant_login.data.decode()).get("x-api-key")
         
 
     
